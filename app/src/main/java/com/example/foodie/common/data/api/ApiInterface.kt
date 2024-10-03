@@ -1,7 +1,7 @@
 package com.example.foodie.common.data.api
 
-import com.example.foodie.details.data.modelDTO.FoodDetailsDTO
-import com.example.foodie.dishes.data.modelDTO.FoodRandomDTO
+import com.example.foodie.common.data.model.FoodResponseDTO
+
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -15,7 +15,7 @@ interface ApiInterface {
         @Query("imageSize") imageSize: String,
         @Query("field") fields: List<String>,
         @Query("random") random: Boolean,
-    ): Response<FoodRandomDTO>
+    ): Response<FoodResponseDTO>
 
 
     @GET("recipes/v2/by-uri")
@@ -25,7 +25,7 @@ interface ApiInterface {
         @Query("app_id") appId: String,
         @Query("app_key") appKey: String,
         @Query("field") field: List<String>  // List of fields to be passed
-    ): Response<FoodDetailsDTO>
+    ): Response<FoodResponseDTO>
 
 
     @GET("recipes/v2")
@@ -36,6 +36,6 @@ interface ApiInterface {
         @Query("q") q: String,
         @Query("imageSize") imageSize: String,
         @Query("field") fields: List<String>,
-    ): Response<FoodRandomDTO>
+    ): Response<FoodResponseDTO>
 
 }

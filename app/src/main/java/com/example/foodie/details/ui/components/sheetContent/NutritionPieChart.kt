@@ -19,7 +19,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.foodie.R
-import com.example.foodie.details.data.model.Hit
+import com.example.foodie.common.data.model.Hit
 
 @Composable
 fun NutritionPieChart(hit: Hit) {
@@ -28,14 +28,14 @@ fun NutritionPieChart(hit: Hit) {
         place.PROCNT.quantity.toFloat() + place.FAT.quantity.toFloat() + place.CHOCDF.quantity.toFloat()
 
     val substances = listOf(
-        (place.FAT.quantity.toFloat() / total * 360),
         (place.PROCNT.quantity.toFloat() / total * 360),
-        (place.CHOCDF.quantity.toFloat() / total * 360)
+        (place.CHOCDF.quantity.toFloat() / total * 360),
+        (place.FAT.quantity.toFloat() / total * 360),
     )
 
     val color = listOf(
-        colorResource(id = R.color.yellow),
         colorResource(id = R.color.green),
+        colorResource(id = R.color.yellow),
         colorResource(id = R.color.red),
     )
 

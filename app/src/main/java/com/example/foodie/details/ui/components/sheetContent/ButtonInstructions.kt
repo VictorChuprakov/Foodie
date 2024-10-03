@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import com.example.foodie.R
-import com.example.foodie.details.data.model.Hit
+import com.example.foodie.common.data.model.Hit
 
 
 @Composable

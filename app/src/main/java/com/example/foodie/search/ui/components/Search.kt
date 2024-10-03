@@ -1,17 +1,14 @@
 package com.example.foodie.search.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -29,11 +26,13 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.foodie.R
+import com.example.foodie.search.ui.SearchViewModel
 
 @Composable
-fun Search() {
+fun Search(searchViewModel: SearchViewModel) {
     var isFocused by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -41,19 +40,9 @@ fun Search() {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(horizontal = 10.dp, vertical = 15.dp)
+        modifier = Modifier.padding(15.dp)
 
     ) {
-        AnimatedVisibility(visible = isFocused) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = null,
-                    modifier = Modifier.size(20.dp)
-
-                )
-            }
-        }
         OutlinedTextField(
             modifier = Modifier
                 .weight(1f)
@@ -68,29 +57,6 @@ fun Search() {
                 )
             },
             shape = CircleShape,
-            trailingIcon = {
-                if (isFocused) {
-                    AnimatedVisibility(
-                        visible = isFocused,
-                        enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                        exit = fadeOut(animationSpec = tween(durationMillis = 300))
-                    ) {
-                        IconButton(onClick = {
-                            keyboardController?.hide()
-                            focusManager.clearFocus()
-                            isFocused = false
-                            query = ""
-                        }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_cancel),
-                                contentDescription = null,
-                                tint = colorResource(id = R.color.primary_blue),
-
-                                )
-                        }
-                    }
-                }
-            },
             leadingIcon = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_search),
@@ -100,28 +66,47 @@ fun Search() {
                     )
                 )
             },
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search // Устанавливаем действие "Поиск" для клавиатуры
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = {
+                    if (query.isNotEmpty()) {
+                        searchViewModel.getFoods(query)
+                        searchViewModel.saveQuery(query) // Сохраняем в базе данных
+                        keyboardController?.hide() // Скрываем клавиатуру после поиска
+                        focusManager.clearFocus() // Снимаем фокус
+                        query = ""
+                    }
+                }
+            ),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = colorResource(id = R.color.transparent),
                 focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                focusedTextColor = colorResource(id = R.color.primary_blue),
+                focusedTextColor = colorResource(id = R.color.primary_gray),
                 focusedPlaceholderColor = colorResource(id = R.color.primary_gray),
 
                 unfocusedBorderColor = colorResource(id = R.color.transparent),
                 unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                unfocusedTextColor = colorResource(id = R.color.primary_blue),
+                unfocusedTextColor = colorResource(id = R.color.primary_gray),
                 unfocusedPlaceholderColor = colorResource(id = R.color.primary_gray)
             ),
             singleLine = true
         )
-        AnimatedVisibility(visible = isFocused) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_filter),
-                    contentDescription = null,
-                    modifier = Modifier.size(25.dp)
-                )
-            }
+        AnimatedVisibility(
+            visible = isFocused,
+        ) {
+            Text(
+                text = "Отмена",
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier
+                    .clickable {
+                        isFocused = false
+                        focusManager.clearFocus()
+                        query = ""
+                    }
+                    .padding(start = 10.dp)
+            )
         }
     }
 }
-

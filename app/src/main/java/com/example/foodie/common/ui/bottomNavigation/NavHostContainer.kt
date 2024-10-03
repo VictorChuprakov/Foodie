@@ -11,8 +11,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.foodie.details.ui.DetailsScreen
-import com.example.foodie.dishes.ui.DishesScreen
 import com.example.foodie.profile.ui.ProfileScreen
+import com.example.foodie.random.ui.DishesScreen
 import com.example.foodie.search.ui.SearchScreen
 
 

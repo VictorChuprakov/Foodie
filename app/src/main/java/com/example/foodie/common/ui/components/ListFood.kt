@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.foodie.dishes.data.model.Hit
+import com.example.foodie.common.data.model.Hit
 
 
 @Composable
@@ -23,9 +23,9 @@ fun ListFood(hit: List<Hit>, navController: NavController) {
     ) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 150.dp),
-            contentPadding = PaddingValues(30.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
-            horizontalArrangement = Arrangement.spacedBy(30.dp),
+            contentPadding = PaddingValues(20.dp),
+            verticalArrangement = Arrangement.spacedBy(40.dp),
+            horizontalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             items(hit) { hit ->
                 DishCard(hit, navController)

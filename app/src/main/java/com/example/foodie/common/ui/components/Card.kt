@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,36 +27,54 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.foodie.R
+import com.example.foodie.common.data.model.Hit
+import com.example.foodie.common.data.model.Recipe
 import com.example.foodie.common.ui.bottomNavigation.Routes
-import com.example.foodie.dishes.data.model.Hit
-import com.example.foodie.dishes.data.model.Recipe
 
 @Composable
 fun DishCard(hit: Hit, navController: NavController) {
+    var isLoading by remember { mutableStateOf(true) }
+
+
     Column(modifier = Modifier.clickable {
         val encodedUri = Uri.encode(hit.recipe.uri)
         navController.navigate("${Routes.details}/$encodedUri")
     }) {
-        AsyncImage(
-            model = hit.recipe.images.large.url,
-            contentDescription = null,
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp)),
 
+        AsyncImage(
+            model = hit.recipe.image,
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(16.dp)),
+            onLoading = { isLoading = true },
+            onSuccess = { isLoading = false },
+            onError = { isLoading = false }
         )
+
         Spacer(modifier = Modifier.height(10.dp))
         RecipeLabel(label = hit.recipe.label)
         Spacer(modifier = Modifier.height(10.dp))
         RecipeDetails(recipe = hit.recipe)
+
+        if (isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = colorResource(id = R.color.white))
+            }
+        }
     }
 }
+
 
 @Composable
 fun RecipeLabel(label: String) {
@@ -71,28 +90,29 @@ fun RecipeLabel(label: String) {
 
 @Composable
 fun RecipeDetails(recipe: Recipe) {
-    val mealTypes = recipe.mealType
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = mealTypes.joinToString(", "),
+            text = recipe.mealType.joinToString(", "),
             style = MaterialTheme.typography.bodySmall,
-            color = colorResource(id = R.color.primary_gray)
+            color = colorResource(id = R.color.primary_gray),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
         Spacer(modifier = Modifier.width(5.dp))
         CircleDot()
         Spacer(modifier = Modifier.width(5.dp))
         Text(
-            text = if (recipe.totalTime == 0.0) "> ∞ mins"
-            else "> ${recipe.totalTime.toInt()} mins",
+            text = if (recipe.totalTime == 0.0) "> ∞ mins" else "> ${recipe.totalTime.toInt()} mins",
             style = MaterialTheme.typography.bodySmall,
-            color = colorResource(id = R.color.primary_gray)
+            color = colorResource(id = R.color.primary_gray),
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }
-
 
 @Composable
 fun CircleDot() {
@@ -103,6 +123,3 @@ fun CircleDot() {
             .background(colorResource(id = R.color.primary_gray))
     )
 }
-
-
-

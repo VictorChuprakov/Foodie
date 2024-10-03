@@ -13,11 +13,15 @@
 
 
 
+
+
     <color name="primary_gray">#9FA5C0</color>
     <color name="primary_green">#1FCC79</color>
     <color name="primary_blue">#2E3E5C</color>
     <color name="primary_form">#A0B0B0B0</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="secondary">#F4F5F7</color>
+
 
 
     <color name="yellow">#FFB347</color>

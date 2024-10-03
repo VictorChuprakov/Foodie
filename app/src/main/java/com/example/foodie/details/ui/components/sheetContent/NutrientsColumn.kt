@@ -11,7 +11,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.foodie.R
-import com.example.foodie.details.data.model.Hit
+import com.example.foodie.common.data.model.Hit
 
 
 @Composable

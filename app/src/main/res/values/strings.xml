@@ -8,4 +8,10 @@
     <string name="label_profile">Profile</string>
     <string name="search">Search</string>
 
+    <string name="confirmation_delete_title">Delete Confirmation</string>
+    <string name="confirmation_delete_message">Are you sure you want to delete all records?</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="search_history">Search History</string>
+    <string name="empty_search_message">Введите блюдо или ингредиент</string>
 </resources>

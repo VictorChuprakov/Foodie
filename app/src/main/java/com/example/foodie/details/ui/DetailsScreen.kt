@@ -1,7 +1,5 @@
 package com.example.foodie.details.ui
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -12,39 +10,28 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.foodie.R
-import com.example.foodie.common.data.api.RetrofitModule
 import com.example.foodie.common.data.api.State
 import com.example.foodie.common.ui.LoadingIndicator
 import com.example.foodie.common.ui.SnackbarMake
-import com.example.foodie.common.ui.bottomNavigation.Routes
 import com.example.foodie.details.ui.components.sheetContent.ButtonInstructions
 import com.example.foodie.details.ui.components.sheetContent.Discription
 import com.example.foodie.details.ui.components.sheetContent.IngredientsSection
@@ -56,8 +43,7 @@ import com.example.foodie.details.ui.components.sheetContent.NutritionPieChart
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailsScreen(navController: NavController, uri: String) {
-    val viewModelFactory = remember { DetailsViewModelFactory(RetrofitModule.provideGetFoodById()) }
-    val foodViewModel: DetailsViewModel = viewModel(factory = viewModelFactory)
+    val foodViewModel: DetailsViewModel = hiltViewModel()
     val state by foodViewModel.state.collectAsState(initial = State.Loading)
     LaunchedEffect(uri) {
         foodViewModel.getFoodsId(uri)
@@ -65,14 +51,7 @@ fun DetailsScreen(navController: NavController, uri: String) {
     }
 
 
-    val scaffoldSheetState = rememberBottomSheetScaffoldState(
-        SheetState(
-            skipPartiallyExpanded = false,
-            density = LocalDensity.current,
-            initialValue = SheetValue.PartiallyExpanded,
-            skipHiddenState = true
-        )
-    )
+    val scaffoldSheetState = rememberBottomSheetScaffoldState()
 
     val height = LocalConfiguration.current.screenHeightDp.dp
 
@@ -80,8 +59,6 @@ fun DetailsScreen(navController: NavController, uri: String) {
     BottomSheetScaffold(
         scaffoldState = scaffoldSheetState,
         sheetPeekHeight = height * 0.65f,
-        sheetSwipeEnabled = false,
-        sheetMaxWidth = Dp.Infinity,
         sheetContent = {
             LazyColumn(
                 modifier = Modifier
@@ -136,7 +113,7 @@ fun DetailsScreen(navController: NavController, uri: String) {
                                 .fillMaxWidth(),
                         )
                         IconButton(
-                            onClick = { navController.navigate(Routes.dishes) },
+                            onClick = { navController.popBackStack() },
                             modifier = Modifier.padding(start = 30.dp, top = 60.dp)
                         ) {
                             Box(modifier = Modifier
