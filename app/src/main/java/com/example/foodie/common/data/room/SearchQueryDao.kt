@@ -11,12 +11,9 @@ interface SearchQueryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(query: SearchQuery)
 
+    @Query("SELECT * FROM search_queries WHERE `query` = :query LIMIT 1")
+    suspend fun findQuery(query: String): SearchQuery?
+
     @Query("SELECT * FROM search_queries")
     fun getAllQueries(): Flow<List<SearchQuery>>
-
-    @Query("DELETE FROM search_queries") // Метод для удаления всех записей
-    suspend fun deleteAll() // Удаление всех записей
-
-    @Query("DELETE FROM search_queries WHERE id = :id")
-    suspend fun deleteById(id: Long) // Удаление по идентификатору
 }

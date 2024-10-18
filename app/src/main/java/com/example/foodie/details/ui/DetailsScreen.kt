@@ -20,7 +20,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
@@ -28,6 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.transform.RoundedCornersTransformation
 import com.example.foodie.R
 import com.example.foodie.common.data.api.State
 import com.example.foodie.common.ui.LoadingIndicator
@@ -45,6 +49,7 @@ import com.example.foodie.details.ui.components.sheetContent.NutritionPieChart
 fun DetailsScreen(navController: NavController, uri: String) {
     val foodViewModel: DetailsViewModel = hiltViewModel()
     val state by foodViewModel.state.collectAsState(initial = State.Loading)
+    val context = LocalContext.current
     LaunchedEffect(uri) {
         foodViewModel.getFoodsId(uri)
 
@@ -107,10 +112,12 @@ fun DetailsScreen(navController: NavController, uri: String) {
                 hits.forEach { hit ->
                     Box {
                         AsyncImage(
-                            model = hit.recipe.images.large.url,
+                            model = ImageRequest.Builder(context = context)
+                                .data(hit.recipe.images.large.url)
+                                .build(),
                             contentDescription = null,
-                            modifier = Modifier
-                                .fillMaxWidth(),
+                            contentScale = ContentScale.FillWidth,
+                            modifier = Modifier.fillMaxWidth()
                         )
                         IconButton(
                             onClick = { navController.popBackStack() },
@@ -136,13 +143,6 @@ fun DetailsScreen(navController: NavController, uri: String) {
     }
 }
 
-@Composable
-fun Divider() {
-    HorizontalDivider(
-        thickness = 1.5.dp,
-        color = colorResource(id = R.color.primary_gray),
-    )
-}
 
 
 

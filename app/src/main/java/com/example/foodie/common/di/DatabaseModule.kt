@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.example.foodie.common.data.room.AppDatabase
 import com.example.foodie.common.data.room.SearchQueryDao
-import com.example.foodie.common.domain.DatabaseRepositoryImpl
+import com.example.foodie.common.data.repository.DatabaseRepositoryImpl
 import com.example.foodie.common.domain.repository.DatabaseRepository
 import dagger.Module
 import dagger.Provides

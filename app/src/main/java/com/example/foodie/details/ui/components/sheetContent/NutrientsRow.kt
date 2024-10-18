@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.foodie.R
 import com.example.foodie.common.data.model.Hit
-import com.example.foodie.details.ui.Divider
 
 @Composable
 fun NutrientsRow(hit: Hit) {

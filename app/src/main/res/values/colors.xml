@@ -7,7 +7,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="white20">#999FA5C0</color>
+    <color name="white20">#66FFFFFF</color>
+
 
 
 
@@ -21,6 +22,7 @@
     <color name="primary_form">#A0B0B0B0</color>
     <color name="transparent">#00FFFFFF</color>
     <color name="secondary">#F4F5F7</color>
+    <color name="outline">#D0DBEA</color>
 
 
 
