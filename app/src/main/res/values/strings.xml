@@ -14,4 +14,13 @@
     <string name="cancel">Cancel</string>
     <string name="search_history">Search History</string>
     <string name="empty_search_message">Введите блюдо или ингредиент</string>
+
+    <string name="all_meal_type_category">All</string>
+    <string name="breakfast_meal_type_category">Breakfast</string>
+    <string name="dinner_meal_type_category">Dinner</string>
+    <string name="lunch_meal_type_category">Lunch</string>
+    <string name="snack_meal_type_category">Snack</string>
+    <string name="teatime_meal_type_category">Teatime</string>
+
+
 </resources>

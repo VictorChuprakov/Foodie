@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import com.example.foodie.R
 import com.example.foodie.common.ui.components.CircleDot
 import com.example.foodie.common.data.model.Hit
-import com.example.foodie.details.ui.Divider
 
 @Composable
 fun Discription(hit: Hit) {

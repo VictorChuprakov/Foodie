@@ -5,8 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface DatabaseRepository {
     suspend fun insert(query: SearchQuery)
-    suspend fun deleteAll()
-    suspend fun deleteById(id: Long)
+    suspend fun findQuery(query: String): SearchQuery?
     fun getAll(): Flow<List<SearchQuery>>
-
 }

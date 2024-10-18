@@ -1,4 +1,4 @@
-package com.example.foodie.random.ui
+package com.example.foodie.dishes.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -6,19 +6,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import coil.ImageLoader
 import com.example.foodie.common.data.api.State
 import com.example.foodie.common.ui.LoadingIndicator
+import com.example.foodie.common.ui.SharedViewModel
 import com.example.foodie.common.ui.SnackbarMake
 import com.example.foodie.common.ui.components.ListFood
 
 @Composable
-fun DishesScreen(navController: NavController) {
-    val foodViewModel: FoodViewModel = hiltViewModel()
-    val state by foodViewModel.state.collectAsState()
-
+fun DishesScreen(navController: NavController,sharedViewModel: SharedViewModel) {
+    val state by sharedViewModel.state.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize(),

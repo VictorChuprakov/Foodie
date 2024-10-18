@@ -4,10 +4,8 @@ import com.example.foodie.common.data.api.ApiInterface
 import com.example.foodie.common.data.constans.RetrofitConstants
 import com.example.foodie.details.data.repository.FoodDetailsRepositoryImpl
 import com.example.foodie.details.domain.repository.FoodDetailsRepository
-import com.example.foodie.random.data.repository.RandomFoodRepositoryImpl
-import com.example.foodie.random.domain.repository.RandomFoodRepository
-import com.example.foodie.search.data.repository.SearchFoodRepositoryImpl
-import com.example.foodie.search.domain.repository.SearchFoodRepository
+import com.example.foodie.dishes.data.repository.FoodRepositoryImpl
+import com.example.foodie.dishes.domain.repository.FoodRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,18 +46,13 @@ object RetrofitModule {
     }
 
     @Provides
-    fun provideGetFoodSearch(apiInterface: ApiInterface): RandomFoodRepository {
-        return RandomFoodRepositoryImpl(apiInterface)
+    fun provideGetFoodSearch(apiInterface: ApiInterface): FoodRepository {
+        return FoodRepositoryImpl(apiInterface)
     }
 
     @Provides
     fun provideGetFoodById(apiInterface: ApiInterface): FoodDetailsRepository {
         return FoodDetailsRepositoryImpl(apiInterface)
-    }
-
-    @Provides
-    fun provideSearchFood(apiInterface: ApiInterface): SearchFoodRepository{
-        return SearchFoodRepositoryImpl(apiInterface)
     }
 
 }

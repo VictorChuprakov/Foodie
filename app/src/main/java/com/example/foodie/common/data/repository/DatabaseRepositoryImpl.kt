@@ -1,4 +1,4 @@
-package com.example.foodie.common.domain
+package com.example.foodie.common.data.repository
 
 import com.example.foodie.common.data.room.SearchQuery
 import com.example.foodie.common.data.room.SearchQueryDao
@@ -10,12 +10,8 @@ class DatabaseRepositoryImpl(private val searchQueryDao: SearchQueryDao) : Datab
         searchQueryDao.insert(query)
     }
 
-    override suspend fun deleteAll() {
-        searchQueryDao.deleteAll()
-    }
-
-    override suspend fun deleteById(id: Long) {
-        searchQueryDao.deleteById(id)
+    override suspend fun findQuery(query: String): SearchQuery? {
+        return searchQueryDao.findQuery(query)
     }
 
     override fun getAll(): Flow<List<SearchQuery>> {

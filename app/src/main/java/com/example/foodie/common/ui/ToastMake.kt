@@ -33,7 +33,6 @@ fun SnackbarMake(error: String) {
             )
         }
     }
-
     Scaffold(
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState) { snackbarData ->

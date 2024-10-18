@@ -10,11 +10,6 @@ object BottomNavConstants {
             R.string.label_dishes
         ),
         BottomNavItem(
-            "search",
-            R.drawable.ic_search,
-            R.string.label_search
-        ),
-        BottomNavItem(
             "profile",
             R.drawable.ic_profile,
             R.string.label_profile

@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -35,12 +36,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "1.8"
     }
 
     buildFeatures {
@@ -58,15 +59,27 @@ android {
     }
 }
 
+
+
 dependencies {
     implementation("androidx.navigation:navigation-compose:2.8.1")
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("io.coil-kt:coil-compose:2.7.0")
+    //noinspection UseTomlInstead
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    //noinspection UseTomlInstead
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.10")
 
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.7.2")
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.7.4")
+
+
+    implementation ("androidx.datastore:datastore-preferences:1.1.1")
+
+    implementation ("androidx.datastore:datastore-preferences-core:1.1.1")
+
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
 
     implementation(libs.hilt.android)
