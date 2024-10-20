@@ -5,10 +5,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
-import com.example.foodie.common.ui.bottomNavigation.NavHostContainer
+import com.example.foodie.common.ui.bottomNavigation.MainScreen
 import com.example.foodie.ui.theme.FoodieTheme
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.ResourceBundle.clearCache
 
 @AndroidEntryPoint
 class MainActivity: ComponentActivity() {
@@ -18,13 +17,9 @@ class MainActivity: ComponentActivity() {
         setContent {
             FoodieTheme {
                 val navComposable = rememberNavController()
-                NavHostContainer(navController = navComposable)
+                MainScreen(navController = navComposable)
             }
         }
-    }
-    override fun onStop() {
-        super.onStop()
-        clearCache()
     }
 }
 

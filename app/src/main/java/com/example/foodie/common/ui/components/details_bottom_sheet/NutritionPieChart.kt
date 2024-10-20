@@ -1,4 +1,4 @@
-package com.example.foodie.details.ui.components.sheetContent
+package com.example.foodie.common.ui.components.details_bottom_sheet
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -16,14 +16,15 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.foodie.R
-import com.example.foodie.common.data.model.Hit
+import com.example.foodie.common.data.model.TotalNutrients
 
 @Composable
-fun NutritionPieChart(hit: Hit) {
-    val place = hit.recipe.totalNutrients
+fun NutritionPieChart(calories: Double, totalNutrients: TotalNutrients) {
+    val place = totalNutrients
     val total =
         place.PROCNT.quantity.toFloat() + place.FAT.quantity.toFloat() + place.CHOCDF.quantity.toFloat()
 
@@ -77,14 +78,14 @@ fun NutritionPieChart(hit: Hit) {
         }
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
-                text = hit.recipe.calories.toInt().toString(),
+                text = calories.toInt().toString(),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
                 ),
                 color = colorResource(id = R.color.primary_gray)
             )
             Text(
-                text = "CALORIES",
+                text = stringResource(R.string.calories),
                 style = MaterialTheme.typography.titleSmall,
                 color = colorResource(id = R.color.primary_gray)
             )

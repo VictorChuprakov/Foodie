@@ -5,12 +5,12 @@ import com.example.foodie.R
 object BottomNavConstants {
     val BottomNavItems = listOf(
         BottomNavItem(
-            "dishes",
+            "home_screen",
             R.drawable.ic_dishes,
             R.string.label_dishes
         ),
         BottomNavItem(
-            "profile",
+            "profile_screen",
             R.drawable.ic_profile,
             R.string.label_profile
         )

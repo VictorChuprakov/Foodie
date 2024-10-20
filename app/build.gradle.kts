@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
 
     id("kotlin-kapt")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -62,30 +63,35 @@ android {
 
 
 dependencies {
-    implementation("androidx.navigation:navigation-compose:2.8.1")
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("io.coil-kt:coil-compose:2.7.0")
-    //noinspection UseTomlInstead
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    //noinspection UseTomlInstead
-    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.10")
-
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.7.4")
-
-
-    implementation ("androidx.datastore:datastore-preferences:1.1.1")
-
-    implementation ("androidx.datastore:datastore-preferences-core:1.1.1")
-
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
-
-
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    //Coil
+    implementation(libs.coil.compose)
+    //Retrofit
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
+    implementation(libs.retrofit)
+    //text-google
+    implementation(libs.androidx.ui.text.google.fonts)
+    //SplashScreen
+    implementation(libs.androidx.core.splashscreen)
+    //dataStore
+    implementation (libs.androidx.datastore.preferences)
+    implementation (libs.androidx.datastore.preferences.core)
+    //coroutines
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
+    //gson
+    implementation (libs.gson)
+    //swipeRefresh
+    implementation (libs.accompanist.swiperefresh)
+    //dagger-hilt
     implementation(libs.hilt.android)
+    implementation(libs.firebase.auth)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-
+    //room
     implementation (libs.androidx.room.runtime)
     kapt (libs.androidx.room.compiler)
     implementation (libs.androidx.room.ktx)
@@ -99,7 +105,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.text.google.fonts)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

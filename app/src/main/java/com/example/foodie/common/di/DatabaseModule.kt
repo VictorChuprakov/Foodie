@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.foodie.common.data.room.AppDatabase
 import com.example.foodie.common.data.room.SearchQueryDao
 import com.example.foodie.common.data.repository.DatabaseRepositoryImpl
+import com.example.foodie.common.data.room.FavoriteRecipesDao
 import com.example.foodie.common.domain.repository.DatabaseRepository
 import dagger.Module
 import dagger.Provides
@@ -34,7 +35,15 @@ object DatabaseModule {
     }
 
     @Provides
-    fun provideDatabaseRepository(favoriteNewsDao: SearchQueryDao): DatabaseRepository {
-        return DatabaseRepositoryImpl(favoriteNewsDao)
+    fun provideFavoriteRecipesDao(database: AppDatabase): FavoriteRecipesDao {
+        return database.favoriteRecipesDao()
+    }
+
+    @Provides
+    fun provideDatabaseRepository(
+        searchQueryDao: SearchQueryDao,
+        favoriteRecipesDao: FavoriteRecipesDao
+    ): DatabaseRepository {
+        return DatabaseRepositoryImpl(searchQueryDao, favoriteRecipesDao)
     }
 }

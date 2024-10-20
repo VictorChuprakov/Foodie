@@ -5,3 +5,5 @@ data class FAT(
     val quantity: Double,
     val unit: String
 )
+
+

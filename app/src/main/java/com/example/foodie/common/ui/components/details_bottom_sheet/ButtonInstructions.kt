@@ -1,4 +1,4 @@
-package com.example.foodie.details.ui.components.sheetContent
+package com.example.foodie.common.ui.components.details_bottom_sheet
 
 import android.content.Intent
 import android.net.Uri
@@ -11,17 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import com.example.foodie.R
-import com.example.foodie.common.data.model.Hit
 
 
 @Composable
-fun ButtonInstructions(hit: Hit) {
+fun ButtonInstructions(url: String) {
     val context = LocalContext.current
     Button(
         onClick = {
             val intent = Intent(Intent.ACTION_VIEW).apply {
-                data = Uri.parse(hit.recipe.url)
+                data = Uri.parse(url)
             }
             context.startActivity(intent)
         },
@@ -31,6 +31,6 @@ fun ButtonInstructions(hit: Hit) {
             contentColor = MaterialTheme.colorScheme.onPrimary
         )
     ) {
-        Text(text = "Instructions")
+        Text(text = stringResource(R.string.instructions))
     }
 }

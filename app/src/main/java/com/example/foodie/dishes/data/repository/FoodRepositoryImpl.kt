@@ -14,24 +14,31 @@ class FoodRepositoryImpl(private val apiInterface: ApiInterface) : FoodRepositor
         return try {
             val mealTypes = getMealTypes(mealType)
             val responce = apiInterface.randomFood(
-                "public",
+                "any",
                 RetrofitConstants.API_ID,
                 RetrofitConstants.API_KEY,
                 query,
                 mealTypes,
                 time.toInt().toString()+"+",
                 "LARGE",
-                listOf("label", "images", "image", "uri", "totalTime", "mealType","uri"),
+                listOf("label",
+                    "image",
+                    "images",
+                    "totalNutrients",
+                    "ingredientLines",
+                    "totalTime",
+                    "calories",
+                    "mealType",
+                    "totalWeight",
+                    "url",
+                    "uri"),
                 true,
             )
 
             // Проверяем успешность запроса
             if (responce.isSuccessful) {
                 val rawBody = responce.body()
-
-
                 val body = rawBody?.toFoodResponce()
-
                 if (body != null) {
                     State.Success(body)
                 } else {

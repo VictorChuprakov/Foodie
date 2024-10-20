@@ -25,8 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foodie.R
 import com.example.foodie.common.data.room.SearchQuery
+import com.example.foodie.common.navigation.Screen
 import com.example.foodie.common.ui.SharedViewModel
-import com.example.foodie.common.ui.bottomNavigation.Routes
 
 @Composable
 fun SearchScreen(navController: NavController, sharedViewModel: SharedViewModel) {
@@ -45,7 +45,7 @@ fun SearchScreen(navController: NavController, sharedViewModel: SharedViewModel)
                     focusManager.clearFocus()
                 },
                 onNavigate = {
-                    navController.navigate(Routes.dishes)
+                    navController.navigate(Screen.Home.route)
                 }
             )
         }

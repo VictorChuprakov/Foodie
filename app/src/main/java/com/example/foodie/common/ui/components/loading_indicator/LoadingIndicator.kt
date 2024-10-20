@@ -1,4 +1,4 @@
-package com.example.foodie.common.ui
+package com.example.foodie.common.ui.components.loading_indicator
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
