@@ -30,7 +30,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Label
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
@@ -41,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -62,8 +62,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foodie.R
+import com.example.foodie.common.navigation.Screen
 import com.example.foodie.common.ui.SharedViewModel
-import com.example.foodie.common.ui.bottomNavigation.Routes
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,13 +76,13 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
     val scope = rememberCoroutineScope()
     val selectMealType by sharedViewModel.lastMealType.collectAsState()
-    val lastMealType = remember { mutableStateOf(selectMealType) }
+    var lastMealType by remember { mutableStateOf(selectMealType) }
     val selectedType by sharedViewModel.lastTime.collectAsState()
-    var sliderPosition = remember { mutableStateOf(selectedType) }
+    var sliderPosition by remember { mutableFloatStateOf(selectedType) }
 
-    LaunchedEffect(selectMealType,selectedType) {
-        lastMealType.value = selectMealType
-        sliderPosition.value = selectedType
+    LaunchedEffect(selectMealType, selectedType) {
+        lastMealType = selectMealType
+        sliderPosition = selectedType
 
 
     }
@@ -95,7 +95,10 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
             .statusBarsPadding()
     ) {
         AnimatedVisibility(visible = isFocused) {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = {
+                navController.popBackStack()
+                keyboardController?.hide()
+            }) {
                 Image(
                     painter = painterResource(R.drawable.ic_arrow_back),
                     contentDescription = null
@@ -108,7 +111,7 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
                 .onFocusChanged { focusState ->
                     isFocused = focusState.isFocused
                     if (focusState.isFocused) {
-                        navController.navigate(Routes.search)
+                        navController.navigate(Screen.Search.route)
                     }
                 },
             value = query,
@@ -152,7 +155,7 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
                 onSearch = {
                     if (query.isNotEmpty()) {
                         sharedViewModel.saveQuery(query)
-                        navController.navigate(Routes.dishes)
+                        navController.navigate(Screen.Home.route)
                         keyboardController?.hide()
                         focusManager.clearFocus(true)
                         isFocused = true
@@ -197,20 +200,21 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
                         .fillMaxSize()
                         .padding(horizontal = 20.dp)
                 ) {
-                    TitleText(text = "Сatehory MealType")
+                    TitleText(title = stringResource(R.string.category_meal_type))
                     Spacer(modifier = Modifier.height(20.dp))
                     CategoryList(
                         list = Category.entries,
-                        selectedMealType = lastMealType.value,
-                        onItemSelected = { selectedType -> lastMealType.value = selectedType }
+                        selectedMealType = lastMealType,
+                        onItemSelected = { selectedType -> lastMealType = selectedType }
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     TitleTextSlider()
                     Spacer(modifier = Modifier.height(20.dp))
                     CustomSlider(
-                        sliderPosition = sliderPosition.value,
-                        onSliderChange = { sliderPosition.value = it }
+                        sliderPosition = sliderPosition,
+                        onSliderChange = { sliderPosition = it }
                     )
+                    SliderValueDisplay(sliderPosition = sliderPosition)
                     Spacer(modifier = Modifier.height(20.dp))
                     ActionButtons(
                         onCancel = {
@@ -222,8 +226,8 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
                             scope.launch {
                                 sheetState.hide()
                             }
-                            sharedViewModel.saveFilter(lastMealType.value, sliderPosition.value)
-                            navController.navigate(Routes.dishes)
+                            sharedViewModel.saveFilter(lastMealType, sliderPosition)
+                            navController.navigate(Screen.Home.route)
                             focusManager.clearFocus(true)
                             isFocused = true
                         }
@@ -244,14 +248,14 @@ private fun TitleTextSlider() {
                     fontWeight = FontWeight.ExtraBold
                 )
             ) {
-                append("Cooking Duration ")
+                append(stringResource(R.string.cooking_duration))
             }
             withStyle(
                 style = MaterialTheme.typography.titleLarge.toSpanStyle().copy(
                     color = colorResource(R.color.primary_gray),
                 )
             ) {
-                append("(in minutes)")
+                append(stringResource(R.string.in_minutes))
             }
         }
 
@@ -259,9 +263,29 @@ private fun TitleTextSlider() {
 }
 
 @Composable
-private fun TitleText(text: String) {
+private fun SliderValueDisplay(
+    sliderPosition: Float,
+) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        Text(
+            text = stringResource(R.string.duration_10),
+            style = MaterialTheme.typography.titleMedium,
+            color = colorResource(R.color.primary_green),
+        )
+        Text(
+            text = stringResource(R.string.duration_60),
+            style = MaterialTheme.typography.titleMedium,
+            color = if (sliderPosition == 60f) colorResource(R.color.primary_green) else colorResource(
+                R.color.primary_gray
+            ),
+        )
+    }
+}
+
+@Composable
+private fun TitleText(title: String) {
     Text(
-        text = text,
+        text = title,
         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
         color = colorResource(R.color.primary_blue),
         modifier = Modifier.padding(top = 15.dp)
@@ -363,7 +387,7 @@ private fun ActionButtons(
             )
         ) {
             Text(
-                text = "Cancel",
+                text = stringResource(R.string.cancel),
                 style = MaterialTheme.typography.titleMedium,
                 color = colorResource(R.color.primary_blue),
                 modifier = Modifier.padding(10.dp)
@@ -376,7 +400,7 @@ private fun ActionButtons(
             colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.primary_green))
         ) {
             Text(
-                text = "Done",
+                text = stringResource(R.string.done),
                 style = MaterialTheme.typography.titleMedium,
                 color = colorResource(R.color.white),
                 modifier = Modifier.padding(10.dp)

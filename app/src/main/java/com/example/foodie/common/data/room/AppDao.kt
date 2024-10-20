@@ -17,3 +17,18 @@ interface SearchQueryDao {
     @Query("SELECT * FROM search_queries")
     fun getAllQueries(): Flow<List<SearchQuery>>
 }
+
+@Dao
+interface FavoriteRecipesDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFavoriteRecipe(recipe: FavoriteRecipes)
+
+    @Query("SELECT * FROM favorite")
+    fun getAllFavoriteRecipes(): Flow<List<FavoriteRecipes>>
+
+    @Query("DELETE FROM favorite WHERE uri = :uri")
+    suspend fun deleteByUri(uri: String)
+
+    @Query("SELECT * FROM favorite WHERE uri = :uri")
+    suspend fun getRecipeByUri(uri: String): FavoriteRecipes
+}

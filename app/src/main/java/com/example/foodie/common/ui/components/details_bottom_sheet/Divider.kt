@@ -1,4 +1,4 @@
-package com.example.foodie.details.ui.components.sheetContent
+package com.example.foodie.common.ui.components.details_bottom_sheet
 
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable

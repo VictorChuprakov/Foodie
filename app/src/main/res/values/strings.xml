@@ -10,8 +10,6 @@
 
     <string name="confirmation_delete_title">Delete Confirmation</string>
     <string name="confirmation_delete_message">Are you sure you want to delete all records?</string>
-    <string name="delete">Delete</string>
-    <string name="cancel">Cancel</string>
     <string name="search_history">Search History</string>
     <string name="empty_search_message">Введите блюдо или ингредиент</string>
 
@@ -21,6 +19,22 @@
     <string name="lunch_meal_type_category">Lunch</string>
     <string name="snack_meal_type_category">Snack</string>
     <string name="teatime_meal_type_category">Teatime</string>
+
+
+    <string name="category_meal_type">Сategory MealType</string>
+    <string name="cooking_duration">Cooking Duration</string>
+    <string name="in_minutes">(in minutes)</string>
+    <string name="duration_10">10</string>
+    <string name="duration_60">60</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+    <string name="author_qasim_syafril">Qasim Syafril</string>
+    <string name="your_favorite_recipes">Your Favorite Recipes</string>
+    <string name="instructions">Instructions</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="nutrition_100g">Nutrition 100g</string>
+    <string name="cal">CAL</string>
+    <string name="calories">CALORIES</string>
 
 
 </resources>
