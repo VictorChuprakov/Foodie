@@ -7,9 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.foodie.common.data.api.State
 import com.example.foodie.common.data.dataPreference.DataPreference
 import com.example.foodie.common.data.model.FoodResponce
-import com.example.foodie.common.data.room.FavoriteRecipes
-import com.example.foodie.common.data.room.SearchQuery
-import com.example.foodie.common.domain.repository.DatabaseRepository
+import com.example.foodie.common.data.room.entities.FavoriteRecipe
+import com.example.foodie.common.data.room.entities.SearchHistory
+import com.example.foodie.common.domain.repository.FavoriteRecipesRepository
+import com.example.foodie.common.domain.repository.SearchHistoryRepository
 import com.example.foodie.common.utils.cacheImages
 import com.example.foodie.dishes.domain.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,17 +31,19 @@ import javax.inject.Inject
 @HiltViewModel
 class SharedViewModel @Inject constructor(
     private val searchFoodRepository: FoodRepository,
-    private val databaseRepository: DatabaseRepository,
+    private val searchHistoryRepository: SearchHistoryRepository,
+    private val favoriteRecipesRepository: FavoriteRecipesRepository,
     private val dataPreference: DataPreference
 ) : ViewModel() {
 
     private val _state = MutableStateFlow<State<FoodResponce>>(State.Loading)
     val state: StateFlow<State<FoodResponce>> = _state.asStateFlow()
 
-    val historySearch: StateFlow<List<SearchQuery>> = databaseRepository.getAllSearchQueries()
+    val historySearch: StateFlow<List<SearchHistory>> = searchHistoryRepository.getAllQueries()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    val favoriteRecipes: Flow<List<FavoriteRecipes>> = databaseRepository.getAllFavoriteRecipes()
+    val favoriteRecipes: Flow<List<FavoriteRecipe
+            >> = favoriteRecipesRepository.getAllRecipes()
 
     private val _lastQuery = MutableStateFlow("")
     private val _lastTime = MutableStateFlow(0f)
@@ -128,9 +131,9 @@ class SharedViewModel @Inject constructor(
     fun saveQuery(query: String) {
         viewModelScope.launch {
             Log.d("SharedViewModel", "Saving query: $query")
-            if (databaseRepository.findQuery(query) == null) {
+            if (searchHistoryRepository.getQueryByText(query) == null) {
                 Log.d("SharedViewModel", "Inserting query into database: $query")
-                databaseRepository.insertSearchQuery(SearchQuery(query = query))
+                searchHistoryRepository.addSearchQuery(SearchHistory(query = query))
             }
             saveLastQuery(query)
         }
@@ -148,13 +151,9 @@ class SharedViewModel @Inject constructor(
         viewModelScope.launch {
             Log.d("SharedViewModel", "Saving filter with MealType: $mealType, Time: $time")
 
-            // Используем async для параллельного выполнения сохранений
-            val saveTimeDeferred = async { dataPreference.saveTime(time) }
-            val saveMealTypeDeferred = async { dataPreference.saveMealType(mealType) }
-
-            // Ожидаем завершения выполнения обеих операций
-            saveTimeDeferred.await()
-            saveMealTypeDeferred.await()
+            // Параллельное выполнение сохранений без ожидания результата
+            launch { dataPreference.saveTime(time) }
+            launch { dataPreference.saveMealType(mealType) }
 
             // Обновляем значения после завершения операций
             _lastTime.value = time
@@ -162,7 +161,8 @@ class SharedViewModel @Inject constructor(
         }
     }
 
-    fun saveFavoriteRecipe(recipe: FavoriteRecipes, context: Context) {
+
+    fun saveFavoriteRecipe(recipe: FavoriteRecipe, context: Context) {
         viewModelScope.launch {
 
             val cachedImagePaths =
@@ -177,7 +177,7 @@ class SharedViewModel @Inject constructor(
             )
 
             // Сохраняем обновленный рецепт в базе данных
-            databaseRepository.insertFavoriteRecipe(updatedRecipe)
+            favoriteRecipesRepository.addFavoriteRecipe(updatedRecipe)
 
 
         }
@@ -186,7 +186,7 @@ class SharedViewModel @Inject constructor(
     // Функция для удаления рецепта из избранного
     fun removeFavoriteRecipe(uri: String) {
         viewModelScope.launch {
-            databaseRepository.deleteFavoriteRecipe(uri)
+            favoriteRecipesRepository.removeFavoriteRecipe(uri)
         }
     }
 }

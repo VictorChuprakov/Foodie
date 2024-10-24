@@ -13,16 +13,14 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 
-
 class DataPreference(private val context: Context) {
 
     // Ключи для настроек
-    companion object {
+    private companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("preference_name")
-        val QUERY_KEY = stringPreferencesKey("query")
-        val MEAL_TYPE_KEY = stringPreferencesKey("meal_type")
-        val TIME_KEY = floatPreferencesKey("time")
-
+        private val QUERY_KEY = stringPreferencesKey("query")
+        private val MEAL_TYPE_KEY = stringPreferencesKey("meal_type")
+        private val TIME_KEY = floatPreferencesKey("time")
     }
 
     // Сохранение запроса
@@ -50,10 +48,7 @@ class DataPreference(private val context: Context) {
     val savedMealType: Flow<String> = context.dataStore.data
         .map { preferences -> preferences[MEAL_TYPE_KEY] ?: "null" }
 
-
     val savedTime: Flow<Float> = context.dataStore.data
-        .map { preferences ->
-            preferences[TIME_KEY] ?: 10f
-        }
+        .map { preferences -> preferences[TIME_KEY] ?: 10f }
 }
 

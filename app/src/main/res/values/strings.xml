@@ -2,10 +2,12 @@
     <string name="app_name">Foodie</string>
 
 
-    <string name="label_dishes">Dishes</string>
+    <string name="label_home">Home</string>
+    <string name="label_notification">Notification</string>
     <string name="label_upload">Upload</string>
-    <string name="label_search">Search</string>
+    <string name="label_scan">Scan</string>
     <string name="label_profile">Profile</string>
+
     <string name="search">Search</string>
 
     <string name="confirmation_delete_title">Delete Confirmation</string>

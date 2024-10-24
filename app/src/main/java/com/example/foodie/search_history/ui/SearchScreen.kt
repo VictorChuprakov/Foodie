@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.foodie.R
-import com.example.foodie.common.data.room.SearchQuery
+import com.example.foodie.common.data.room.entities.SearchHistory
 import com.example.foodie.common.navigation.Screen
 import com.example.foodie.common.ui.SharedViewModel
 
@@ -56,7 +56,7 @@ fun SearchScreen(navController: NavController, sharedViewModel: SharedViewModel)
 
 @Composable
 private fun SearchItem(
-    query: SearchQuery,
+    query: SearchHistory,
     onSaveLastQuery: () -> Unit,  // Передаём лямбду для сохранения
     onNavigate: () -> Unit
 ) {
