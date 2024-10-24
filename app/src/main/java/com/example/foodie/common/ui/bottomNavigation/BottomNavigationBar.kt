@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.foodie.R
+import com.example.foodie.common.navigation.Screen
 
 
 @Composable
@@ -31,7 +32,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         val currentRoute = navBackStackEntry?.destination?.route
 
         BottomNavConstants.BottomNavItems.forEach { navItem ->
-            if (navItem.route == "scan_screen") {
+            if (navItem.route == Screen.Scan.route) {
                 NavigationBarItem(
                     selected = false,
                     onClick = {},

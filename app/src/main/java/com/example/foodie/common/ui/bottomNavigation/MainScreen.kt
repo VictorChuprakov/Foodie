@@ -40,12 +40,6 @@ import com.example.foodie.profile.ui.ProfileScreen
 import com.example.foodie.search.ui.Search
 import com.example.foodie.search_history.ui.SearchScreen
 
-@Preview(showBackground = true)
-@Composable
-fun BottomNavigationBarPreview(){
-    val navController = rememberNavController()
-    MainScreen(navController)
-}
 @Composable
 fun MainScreen(navController: NavHostController) {
     val currentBackStackEntry = navController.currentBackStackEntryAsState().value
@@ -58,25 +52,27 @@ fun MainScreen(navController: NavHostController) {
             }
         },
         bottomBar = {
-            if (currentRoute != "${Screen.Detail.route}/{id}" && currentRoute != "${Screen.FavoriteDetails.route}/{id}") {
+            if (currentRoute != "${Screen.Detail.route}/{id}" && currentRoute != "${Screen.FavoriteDetails.route}/{id}" && currentRoute != Screen.Search.route) {
                 BottomNavigationBar(navController)
             }
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /* Действие сканирования */ },
-                contentColor = colorResource(R.color.white),
-                containerColor = colorResource(R.color.primary_green),
-                shape = CircleShape,
-                modifier = Modifier
-                    .size(70.dp)
-                    .offset(y = 55.dp)
-            ) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_scan),
-                    contentDescription = null,
-                    modifier = Modifier.size(30.dp)
-                )
+            if (currentRoute != Screen.Search.route) {
+                FloatingActionButton(
+                    onClick = { /* Действие сканирования */ },
+                    contentColor = colorResource(R.color.white),
+                    containerColor = colorResource(R.color.primary_green),
+                    shape = CircleShape,
+                    modifier = Modifier
+                        .size(70.dp)
+                        .offset(y = 55.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_scan),
+                        contentDescription = null,
+                        modifier = Modifier.size(30.dp)
+                    )
+                }
             }
         },
         floatingActionButtonPosition = FabPosition.Center
@@ -98,8 +94,8 @@ fun MainScreen(navController: NavHostController) {
                 route = "${Screen.Detail.route}/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.StringType })
             ) { backStackEntry ->
-                val uri = backStackEntry.arguments?.getString("id")
-                uri?.let { DetailsScreen(navController, it) }
+                val id = backStackEntry.arguments?.getString("id")
+                id?.let { DetailsScreen(navController, it) }
             }
             composable(route = Screen.Search.route) {
                 SearchScreen(navController, sharedViewModel)
@@ -111,8 +107,8 @@ fun MainScreen(navController: NavHostController) {
                 route = "${Screen.FavoriteDetails.route}/{id}",
                 arguments = listOf(navArgument("id") { type = NavType.StringType })
             ) { backStackEntry ->
-                val uri = backStackEntry.arguments?.getString("id")
-                uri?.let { FavoriteDetailsScreen(navController, it) }
+                val id = backStackEntry.arguments?.getString("id")
+                id?.let { FavoriteDetailsScreen(navController, it) }
             }
         }
     }

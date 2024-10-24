@@ -15,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -49,11 +50,11 @@ import java.io.File
 @Composable
 fun FavoriteDetailsScreen(navController: NavController,id: String) {
     val favoriteDetailsViewModel: FavoriteDetailsViewModel = hiltViewModel()
-    val recipe = remember { mutableStateOf<FavoriteRecipe?>(null) }
+    favoriteDetailsViewModel.savedStateHandle["favoriteFoodId"] = id
+    favoriteDetailsViewModel.getRecipeById()
+    val recipe = favoriteDetailsViewModel.recipe
     val context = LocalContext.current
-    LaunchedEffect(id) {
-        recipe.value = favoriteDetailsViewModel.getRecipeByUri(id)
-    }
+
 
     val scaffoldSheetState = rememberBottomSheetScaffoldState()
 

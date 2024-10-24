@@ -1,31 +1,32 @@
 package com.example.foodie.common.ui.bottomNavigation
 
 import com.example.foodie.R
+import com.example.foodie.common.navigation.Screen
 
 object BottomNavConstants {
     val BottomNavItems = listOf(
         BottomNavItem(
-            "home_screen",
+            Screen.Home.route,
             R.drawable.ic_home,
             R.string.label_home
         ),
         BottomNavItem(
-            "upload_screen",
+            Screen.Upload.route,
             R.drawable.ic_edit,
             R.string.label_upload
         ),
         BottomNavItem(
-            "scan_screen",
+            Screen.Scan.route,
             null,
             R.string.label_scan
         ),
         BottomNavItem(
-            "notification_screen",
+            Screen.Notification.route,
             R.drawable.ic_notification,
             R.string.label_notification
         ),
         BottomNavItem(
-            "profile_screen",
+            Screen.Profile.route,
             R.drawable.ic_profile,
             R.string.label_profile
         )

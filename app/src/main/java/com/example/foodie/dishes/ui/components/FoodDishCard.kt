@@ -55,12 +55,7 @@ fun FoodDishCard(hit: Hit, navController: NavController, sharedViewModel: Shared
 
     val favoriteRecipesState = sharedViewModel.favoriteRecipes.collectAsState(initial = emptyList())
     val favoriteRecipes = favoriteRecipesState.value
-    val isFavorite = favoriteRecipes.any { it.uri == hit.recipe.uri }
-    val newFavoriteState = remember { mutableStateOf(isFavorite) }
-
-    LaunchedEffect(favoriteRecipesState.value) {
-        newFavoriteState.value = favoriteRecipes.any { it.uri == hit.recipe.uri }
-    }
+    val isFavorite = remember(favoriteRecipes) { favoriteRecipes.any { it.uri == hit.recipe.uri } }
 
     Column(modifier = Modifier.clickable {
         val encodedUri = Uri.encode(hit.recipe.uri)
@@ -92,16 +87,15 @@ fun FoodDishCard(hit: Hit, navController: NavController, sharedViewModel: Shared
                 contentAlignment = Alignment.Center
             ) {
                 IconButton(onClick = {
-                    if (newFavoriteState.value) {
+                    if (isFavorite) {
                         sharedViewModel.removeFavoriteRecipe(hit.recipe.uri)
                     } else {
                         val favoriteRecipe = convertRecipeToFavoriteRecipe(hit.recipe)
                         sharedViewModel.saveFavoriteRecipe(favoriteRecipe, context)
                     }
-                    newFavoriteState.value = !newFavoriteState.value
                 }) {
                     Icon(
-                        painter = if (newFavoriteState.value) {
+                        painter = if (isFavorite) {
                             painterResource(R.drawable.ic_favorite)
                         } else {
                             painterResource(R.drawable.ic_favorite_borber)

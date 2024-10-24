@@ -14,7 +14,6 @@ import com.example.foodie.common.domain.repository.SearchHistoryRepository
 import com.example.foodie.common.utils.cacheImages
 import com.example.foodie.dishes.domain.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -152,9 +151,12 @@ class SharedViewModel @Inject constructor(
             Log.d("SharedViewModel", "Saving filter with MealType: $mealType, Time: $time")
 
             // Параллельное выполнение сохранений без ожидания результата
-            launch { dataPreference.saveTime(time) }
-            launch { dataPreference.saveMealType(mealType) }
+            val timeJob = launch { dataPreference.saveTime(time) }
+            val mealTypeJob = launch { dataPreference.saveMealType(mealType) }
 
+            // Ожидание завершения обоих корутин
+            timeJob.join()
+            mealTypeJob.join()
             // Обновляем значения после завершения операций
             _lastTime.value = time
             _lastMealType.value = mealType
