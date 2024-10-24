@@ -1,38 +1,13 @@
 package com.example.foodie.common.data.room
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+
 import androidx.room.TypeConverter
 import com.example.foodie.common.data.model.Images
 import com.example.foodie.common.data.model.TotalNutrients
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-
-@Entity(tableName = "search_queries")
-data class SearchQuery(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0, // Убедитесь, что id определен как PrimaryKey
-    val query: String
-)
-
-@Entity(tableName = "favorite")
-data class FavoriteRecipes(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val calories: Double,
-    val image: String,
-    val images: Images,
-    val label: String,
-    val mealType: List<String>, // Лучше использовать String, если планируете хранить в виде текста
-    val totalTime: Double,
-    val ingredientLines: List<String>, // Лучше использовать String, если планируете хранить в виде текста
-    val totalNutrients:TotalNutrients,
-    val totalWeight: Double,
-    val url: String,
-    val uri: String
-)
-
-
-class Converters {
+class Converter {
     private val gson = Gson()
 
     @TypeConverter
@@ -57,7 +32,6 @@ class Converters {
         return gson.fromJson(data, listType)
     }
 
-    // Добавляем конвертер для Images
     @TypeConverter
     fun fromImages(images: Images): String {
         return gson.toJson(images)

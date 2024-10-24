@@ -35,11 +35,11 @@ import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.example.foodie.R
 import com.example.foodie.common.data.model.Hit
-import com.example.foodie.common.data.room.FavoriteRecipes
 import com.example.foodie.common.navigation.Screen
 import com.example.foodie.common.ui.SharedViewModel
 import com.example.foodie.common.ui.components.dishes_card_components.RecipeDetails
 import com.example.foodie.common.ui.components.dishes_card_components.RecipeLabel
+import com.example.foodie.profile.ui.components.convertRecipeToFavoriteRecipe
 
 /**
 * Компонент, отображающий карточку блюда с возможностью добавить его в избранное.
@@ -51,25 +51,17 @@ import com.example.foodie.common.ui.components.dishes_card_components.RecipeLabe
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun FoodDishCard(hit: Hit, navController: NavController, sharedViewModel: SharedViewModel) {
-
-    // Получаем текущий контекст для использования в библиотеке Coil.
     val context = LocalContext.current
 
-    // Подписываемся на состояние избранных рецептов из ViewModel.
     val favoriteRecipesState = sharedViewModel.favoriteRecipes.collectAsState(initial = emptyList())
     val favoriteRecipes = favoriteRecipesState.value
-    val isFavorite = favoriteRecipes.any { it.uri == hit.recipe.uri }
-    val newFavoriteState = remember { mutableStateOf(isFavorite) }
-    LaunchedEffect(favoriteRecipesState.value) {
-        newFavoriteState.value = favoriteRecipes.any { it.uri == hit.recipe.uri }
-    }
+    val isFavorite = remember(favoriteRecipes) { favoriteRecipes.any { it.uri == hit.recipe.uri } }
 
     Column(modifier = Modifier.clickable {
         val encodedUri = Uri.encode(hit.recipe.uri)
         navController.navigate("${Screen.Detail.route}/$encodedUri")
     }) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopEnd) {
-            // Загружаем изображение блюда с помощью Coil.
             AsyncImage(
                 model = ImageRequest.Builder(context = context)
                     .data(hit.recipe.image)
@@ -94,52 +86,30 @@ fun FoodDishCard(hit: Hit, navController: NavController, sharedViewModel: Shared
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                // Кнопка для добавления/удаления рецепта из избранного.
                 IconButton(onClick = {
-                    if (newFavoriteState.value) {
-                        // Удаляем рецепт из избранного, если он уже есть.
+                    if (isFavorite) {
                         sharedViewModel.removeFavoriteRecipe(hit.recipe.uri)
                     } else {
-                        // Сохраняем рецепт в избранное, если его там нет.
-                        val favoriteRecipe = FavoriteRecipes(
-                            calories = hit.recipe.calories,
-                            image = hit.recipe.image,
-                            images = hit.recipe.images,
-                            label = hit.recipe.label,
-                            mealType = hit.recipe.mealType,
-                            totalTime = hit.recipe.totalTime,
-                            ingredientLines = hit.recipe.ingredientLines,
-                            totalNutrients = hit.recipe.totalNutrients,
-                            totalWeight = hit.recipe.totalWeight,
-                            url = hit.recipe.url,
-                            uri = hit.recipe.uri
-                        )
+                        val favoriteRecipe = convertRecipeToFavoriteRecipe(hit.recipe)
                         sharedViewModel.saveFavoriteRecipe(favoriteRecipe, context)
                     }
-                    // Меняем состояние избранного.
-                    newFavoriteState.value = !newFavoriteState.value
                 }) {
-                    // Отображаем иконку в зависимости от состояния "избранное".
                     Icon(
-                        painter = if (newFavoriteState.value) {
+                        painter = if (isFavorite) {
                             painterResource(R.drawable.ic_favorite)
                         } else {
                             painterResource(R.drawable.ic_favorite_borber)
                         },
                         contentDescription = null,
-                        tint = colorResource(R.color.primary_blue)
+                        tint = colorResource(R.color.white)
                     )
-
                 }
             }
         }
         Spacer(modifier = Modifier.height(10.dp))
-        // Отображаем название рецепта.
         RecipeLabel(label = hit.recipe.label)
         Spacer(modifier = Modifier.height(10.dp))
-        // Отображаем детали рецепта.
         RecipeDetails(mealType = hit.recipe.mealType, totalTime = hit.recipe.totalTime)
     }
 }
-
 

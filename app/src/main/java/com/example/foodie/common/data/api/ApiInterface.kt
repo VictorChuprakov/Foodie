@@ -1,6 +1,6 @@
 package com.example.foodie.common.data.api
 
-import com.example.foodie.common.data.model.FoodResponseDTO
+import com.example.foodie.common.data.modelDTO.FoodResponseDTO
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query

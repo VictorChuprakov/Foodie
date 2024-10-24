@@ -51,11 +51,10 @@ import com.example.foodie.common.ui.components.details_bottom_sheet.NutritionPie
 @Composable
 fun DetailsScreen(navController: NavController, id: String) {
     val foodViewModel: DetailsViewModel = hiltViewModel()
+    foodViewModel.savedStateHandle["foodId"] = id
+    foodViewModel.getFoodsId()
     val state by foodViewModel.state.collectAsState(initial = State.Loading)
     val context = LocalContext.current
-    LaunchedEffect(id) {
-        foodViewModel.getFoodsId(id)
-    }
 
     val scaffoldSheetState = rememberBottomSheetScaffoldState()
     val height = LocalConfiguration.current.screenHeightDp.dp
