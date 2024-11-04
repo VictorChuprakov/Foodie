@@ -30,7 +30,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
 import com.example.foodie.R
-import com.example.foodie.common.data.room.FavoriteRecipes
+import com.example.foodie.common.data.room.entities.FavoriteRecipe
 import com.example.foodie.common.navigation.Screen
 import com.example.foodie.common.ui.components.dishes_card_components.RecipeDetails
 import com.example.foodie.common.ui.components.dishes_card_components.RecipeLabel
@@ -45,7 +45,7 @@ import java.io.File
  * @param profileViewModel ViewModel для управления состоянием избранных рецептов - удаление.
  **/
 @Composable
-fun FavoriteDishCard(hit: FavoriteRecipes, navController: NavController, profileViewModel: ProfileViewModel) {
+fun FavoriteDishCard(hit: FavoriteRecipe, navController: NavController, profileViewModel: ProfileViewModel) {
     val context = LocalContext.current
     Column(modifier = Modifier.clickable {
         // Переходим на экран деталей блюда по клику на карточку.

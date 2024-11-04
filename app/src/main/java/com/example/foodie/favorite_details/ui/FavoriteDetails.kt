@@ -1,6 +1,5 @@
 package com.example.foodie.favorite_details.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +15,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,13 +31,13 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.foodie.R
-import com.example.foodie.common.data.room.FavoriteRecipes
+import com.example.foodie.common.data.room.entities.FavoriteRecipe
+import com.example.foodie.common.ui.components.details_bottom_sheet.ButtonInstructions
 import com.example.foodie.common.ui.components.details_bottom_sheet.Discription
 import com.example.foodie.common.ui.components.details_bottom_sheet.IngredientsList
+import com.example.foodie.common.ui.components.details_bottom_sheet.NutrientsColumn
 import com.example.foodie.common.ui.components.details_bottom_sheet.NutrientsRow
 import com.example.foodie.common.ui.components.details_bottom_sheet.NutritionPieChart
-import com.example.foodie.common.ui.components.details_bottom_sheet.ButtonInstructions
-import com.example.foodie.common.ui.components.details_bottom_sheet.NutrientsColumn
 import java.io.File
 
 /**
@@ -50,11 +50,11 @@ import java.io.File
 @Composable
 fun FavoriteDetailsScreen(navController: NavController,id: String) {
     val favoriteDetailsViewModel: FavoriteDetailsViewModel = hiltViewModel()
-    val recipe = remember { mutableStateOf<FavoriteRecipes?>(null) }
+    favoriteDetailsViewModel.savedStateHandle["favoriteFoodId"] = id
+    favoriteDetailsViewModel.getRecipeById()
+    val recipe = favoriteDetailsViewModel.recipe
     val context = LocalContext.current
-    LaunchedEffect(id) {
-        recipe.value = favoriteDetailsViewModel.getRecipeByUri(id)
-    }
+
 
     val scaffoldSheetState = rememberBottomSheetScaffoldState()
 

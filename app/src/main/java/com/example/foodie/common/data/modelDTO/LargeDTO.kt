@@ -1,6 +1,6 @@
-package com.example.foodie.common.data.model
+package com.example.foodie.common.data.modelDTO
 
-data class LARGEDTO(
+data class LargeDTO(
     val height: Int? = null,
     val url: String? = null,
     val width: Int? = null

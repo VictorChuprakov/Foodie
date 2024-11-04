@@ -4,9 +4,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.dagger.hilt)
     alias(libs.plugins.compose.compiler)
-
     id("kotlin-kapt")
-    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -88,7 +86,6 @@ dependencies {
     implementation (libs.accompanist.swiperefresh)
     //dagger-hilt
     implementation(libs.hilt.android)
-    implementation(libs.firebase.auth)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
     //room
