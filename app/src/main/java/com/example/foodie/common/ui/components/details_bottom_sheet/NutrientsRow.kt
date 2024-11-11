@@ -17,14 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.example.foodie.R
 import com.example.foodie.common.data.model.TotalNutrients
+import com.example.foodie.common.ui.ColorNutrition
 
 @Composable
 fun NutrientsRow(totalNutrients: TotalNutrients) {
@@ -35,17 +33,17 @@ fun NutrientsRow(totalNutrients: TotalNutrients) {
     ) {
         PowerTable(
             totalNutrients.PROCNT.quantity.toFloat(),
-            R.color.green,
+            ColorNutrition.GREEN.color,
             totalNutrients.PROCNT.label
         )
         PowerTable(
             totalNutrients.CHOCDF.quantity.toFloat(),
-            R.color.yellow,
+            ColorNutrition.YELLOW.color,
             totalNutrients.CHOCDF.label
         )
         PowerTable(
             totalNutrients.FAT.quantity.toFloat(),
-            R.color.red,
+            ColorNutrition.RED.color,
             totalNutrients.FAT.label
         )
     }
@@ -54,11 +52,9 @@ fun NutrientsRow(totalNutrients: TotalNutrients) {
 }
 
 @Composable
-private fun PowerTable(Quantity: Float, color: Int, title: String) {
-    val context = LocalContext.current
-    val arcColor = Color(ContextCompat.getColor(context, color))
+private fun PowerTable(quantity: Float, color: Color, title: String) {
     val circleSize = 65.dp
-    val textColor = colorResource(id = R.color.primary_gray)
+    val textColor = MaterialTheme.colorScheme.secondary
 
 
     Column(
@@ -72,7 +68,7 @@ private fun PowerTable(Quantity: Float, color: Int, title: String) {
         ) {
             Canvas(modifier = Modifier.size(circleSize)) {
                 drawArc(
-                    color = arcColor,
+                    color = color,
                     startAngle = 0f,
                     sweepAngle = 360f,
                     useCenter = false,
@@ -81,7 +77,7 @@ private fun PowerTable(Quantity: Float, color: Int, title: String) {
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = Quantity.toInt().toString(),
+                    text = quantity.toInt().toString(),
                     style = MaterialTheme.typography.bodySmall.copy(
                         fontWeight = FontWeight.ExtraBold,
                     ),

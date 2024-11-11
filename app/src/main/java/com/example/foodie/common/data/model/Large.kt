@@ -1,6 +1,6 @@
 package com.example.foodie.common.data.model
 
-data class Large(
+data class LARGE(
     val height: Int,
     val url: String,
     val width: Int

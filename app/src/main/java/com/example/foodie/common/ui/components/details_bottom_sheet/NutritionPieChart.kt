@@ -15,29 +15,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.foodie.R
 import com.example.foodie.common.data.model.TotalNutrients
+import com.example.foodie.common.ui.ColorNutrition
 
 @Composable
 fun NutritionPieChart(calories: Double, totalNutrients: TotalNutrients) {
-    val place = totalNutrients
-    val total =
-        place.PROCNT.quantity.toFloat() + place.FAT.quantity.toFloat() + place.CHOCDF.quantity.toFloat()
+    val total = totalNutrients.PROCNT.quantity.toFloat() + totalNutrients.FAT.quantity.toFloat() + totalNutrients.CHOCDF.quantity.toFloat()
 
     val substances = listOf(
-        (place.PROCNT.quantity.toFloat() / total * 360),
-        (place.CHOCDF.quantity.toFloat() / total * 360),
-        (place.FAT.quantity.toFloat() / total * 360),
+        (totalNutrients.PROCNT.quantity.toFloat() / total * 360),
+        (totalNutrients.CHOCDF.quantity.toFloat() / total * 360),
+        (totalNutrients.FAT.quantity.toFloat() / total * 360),
     )
 
     val color = listOf(
-        colorResource(id = R.color.green),
-        colorResource(id = R.color.yellow),
-        colorResource(id = R.color.red),
+        ColorNutrition.GREEN.color,
+        ColorNutrition.YELLOW.color,
+        ColorNutrition.RED.color,
     )
 
     Spacer(modifier = Modifier.height(10.dp))
@@ -46,7 +44,7 @@ fun NutritionPieChart(calories: Double, totalNutrients: TotalNutrients) {
         style = MaterialTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.ExtraBold
         ),
-        color = colorResource(id = R.color.primary_blue)
+        color = MaterialTheme.colorScheme.primary
     )
     Box(
         modifier = Modifier
@@ -82,12 +80,12 @@ fun NutritionPieChart(calories: Double, totalNutrients: TotalNutrients) {
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.ExtraBold,
                 ),
-                color = colorResource(id = R.color.primary_gray)
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = stringResource(R.string.calories),
                 style = MaterialTheme.typography.titleSmall,
-                color = colorResource(id = R.color.primary_gray)
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }

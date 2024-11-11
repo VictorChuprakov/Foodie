@@ -16,17 +16,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.foodie.R
 
 @Composable
 fun Discription(label: String, totalTime: Double,mealType: List<String>) {
     Text(
         text = label,
         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
-        color = colorResource(id = R.color.primary_blue)
+        color = MaterialTheme.colorScheme.primary
     )
     Spacer(modifier = Modifier.height(10.dp))
     Row(
@@ -37,7 +35,7 @@ fun Discription(label: String, totalTime: Double,mealType: List<String>) {
         Text(
             text = mealType.joinToString(", ") { it.replaceFirstChar { char -> char.titlecase() } },
             style = MaterialTheme.typography.bodyMedium,
-            color = colorResource(id = R.color.primary_gray)
+            color = MaterialTheme.colorScheme.secondary
         )
         Spacer(modifier = Modifier.width(5.dp))
         DotIndicator()
@@ -45,7 +43,7 @@ fun Discription(label: String, totalTime: Double,mealType: List<String>) {
         Text(
             text = if (totalTime >= 60.0) ">60 mins" else ">${totalTime.toInt()} mins",
             style = MaterialTheme.typography.bodyMedium,
-            color = colorResource(id = R.color.primary_gray)
+            color = MaterialTheme.colorScheme.secondary
         )
     }
     Spacer(modifier = Modifier.height(10.dp))
@@ -59,6 +57,6 @@ private fun DotIndicator() {
         modifier = Modifier
             .size(5.dp)
             .clip(CircleShape)
-            .background(colorResource(id = R.color.primary_gray))
+            .background(MaterialTheme.colorScheme.secondary)
     )
 }

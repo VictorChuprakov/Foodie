@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.Foodie.SplashScreen" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:windowSplashScreenBackground" tools:targetApi="s">#1B1B1B</item>
+        <item name="android:windowSplashScreenBackground" tools:targetApi="s">#141313</item>
         <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@drawable/ic_splash_screen</item>
         <item name="postSplashScreenTheme">@style/Theme.Foodie</item>
     </style>

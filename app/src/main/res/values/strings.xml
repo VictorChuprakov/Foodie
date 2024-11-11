@@ -1,20 +1,24 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">Foodie</string>
 
-
+    <!-- Labels -->
     <string name="label_home">Home</string>
     <string name="label_notification">Notification</string>
     <string name="label_upload">Upload</string>
     <string name="label_scan">Scan</string>
     <string name="label_profile">Profile</string>
 
+    <!-- Search -->
     <string name="search">Search</string>
-
-    <string name="confirmation_delete_title">Delete Confirmation</string>
-    <string name="confirmation_delete_message">Are you sure you want to delete all records?</string>
     <string name="search_history">Search History</string>
     <string name="empty_search_message">Введите блюдо или ингредиент</string>
 
+    <!-- Confirmation -->
+    <string name="confirmation_delete_title">Delete Confirmation</string>
+    <string name="confirmation_delete_message">Are you sure you want to delete all records?</string>
+
+    <!-- Meal Type Categories -->
     <string name="all_meal_type_category">All</string>
     <string name="breakfast_meal_type_category">Breakfast</string>
     <string name="dinner_meal_type_category">Dinner</string>
@@ -22,9 +26,9 @@
     <string name="snack_meal_type_category">Snack</string>
     <string name="teatime_meal_type_category">Teatime</string>
 
-
-    <string name="category_meal_type">Сategory MealType</string>
-    <string name="cooking_duration">Cooking Duration</string>
+    <!-- Other Labels -->
+    <string name="category_meal_type">Category MealType</string>
+    <string name="cooking_duration">Cooking Duration </string>
     <string name="in_minutes">(in minutes)</string>
     <string name="duration_10">10</string>
     <string name="duration_60">60</string>
@@ -38,5 +42,50 @@
     <string name="cal">CAL</string>
     <string name="calories">CALORIES</string>
 
+    <!-- Onboarding and Login -->
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="enter_account_prompt">Please enter your account here</string>
+    <string name="start_cooking">Start Cooking</string>
+    <string name="join_community_prompt">Let’s join our community to cook better food!</string>
+    <string name="get_started">Get Started</string>
+    <string name="welcome">Welcome!</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sing_in">Sing In</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="continue_with">Or continue with</string>
+    <string name="google">Google</string>
+    <string name="no_account_prompt">Don’t have any account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="name">Name</string>
+    <string name="send_again">Send Again</string>
 
+    <!-- Password Requirements -->
+    <string name="password_requirements">Your Password must contain:</string>
+    <string name="atleast_8_characters">At least 8 characters</string>
+
+    <!-- Sign Up and Verification -->
+    <string name="verify">Verify</string>
+    <string name="check_your_email">Check your email</string>
+    <string name="verification_code_prompt">We’ve sent the code to your email</string>
+
+    <!-- Password Recovery -->
+    <string name="password_recovery">Password Recovery</string>
+    <string name="enter_email_recovery">Enter your email to recover your password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="reset_password">Reset your password</string>
+    <string name="enter_new_password">Please enter your new password</string>
+
+    <string name="favorite_dishes_empty_message">Your favorite dishes will be here</string>
+
+    <!-- Error Messages -->
+    <string name="network_error_message">Please check your internet connection and try again.</string>
+    <string name="response_null_message">The server response is empty. Please try again later.</string>
+    <string name="request_failed_message">The request failed. Check the request or try again.</string>
+    <string name="unexpected_error_message">An unexpected error occurred. Please try again later.</string>
+
+    <!-- Navigation -->
+    <string name="right">Right</string>
+    <string name="left">Left</string>
+    <string name="repeat">Repeat</string>
 </resources>

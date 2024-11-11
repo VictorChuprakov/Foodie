@@ -1,5 +1,6 @@
 package com.example.foodie.common.ui.components.details_bottom_sheet
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,14 +21,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import com.example.foodie.R
 import com.example.foodie.common.data.model.TotalNutrients
+import com.example.foodie.common.ui.ColorNutrition
 
 
 @Composable
@@ -39,23 +38,23 @@ fun NutrientsColumn(totalNutrients: TotalNutrients,calories: Double) {
         style = MaterialTheme.typography.titleLarge.copy(
             fontWeight = FontWeight.ExtraBold
         ),
-        color = colorResource(id = R.color.primary_blue)
+        color = MaterialTheme.colorScheme.primary
     )
     Column {
         NutrientInfoRowPer100g(
             totalNutrients.FAT.quantity.toFloat(),
-            R.color.red,
+            ColorNutrition.RED.color,
             calories.toFloat(),
             totalNutrients.FAT.label
         )
         NutrientInfoRowPer100g(
             totalNutrients.CHOCDF.quantity.toFloat(),
-            R.color.yellow,
+            ColorNutrition.YELLOW.color,
             calories.toFloat(),
             totalNutrients.CHOCDF.label
         )
         NutrientInfoRowPer100g(totalNutrients.PROCNT.quantity.toFloat(),
-            R.color.green,
+            ColorNutrition.GREEN.color,
             calories.toFloat(),
             totalNutrients.PROCNT.label
         )
@@ -63,12 +62,9 @@ fun NutrientsColumn(totalNutrients: TotalNutrients,calories: Double) {
 }
 
 
+@SuppressLint("DefaultLocale")
 @Composable
-private fun NutrientInfoRowPer100g(totalQuantity: Float, color: Int, totalCalories: Float, title: String) {
-    val context = LocalContext.current
-    val arcColor = Color(ContextCompat.getColor(context, color))
-
-    // Рассчитываем граммы, исходя из общего количества и калорий
+private fun NutrientInfoRowPer100g(totalQuantity: Float, color: Color, totalCalories: Float, title: String) {
     val calculatedGrams = (totalQuantity / totalCalories) * 360
 
     Row(
@@ -88,19 +84,19 @@ private fun NutrientInfoRowPer100g(totalQuantity: Float, color: Int, totalCalori
                 modifier = Modifier
                     .size(6.dp)
                     .clip(CircleShape)
-                    .background(arcColor)
+                    .background(color)
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = title.uppercase(),
                 style = MaterialTheme.typography.titleSmall,
-                color = colorResource(id = R.color.primary_gray),
+                color = MaterialTheme.colorScheme.secondary,
             )
         }
         Text(
             text = String.format("%.0fg", calculatedGrams),
             style = MaterialTheme.typography.bodyMedium,
-            color = colorResource(id = R.color.primary_gray),
+            color = MaterialTheme.colorScheme.secondary,
             modifier = Modifier.padding(end = 10.dp)
         )
     }

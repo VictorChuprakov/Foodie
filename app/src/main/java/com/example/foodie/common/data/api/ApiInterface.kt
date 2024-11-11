@@ -23,7 +23,7 @@ interface ApiInterface {
     @GET("recipes/v2/by-uri")
     suspend fun getFoodId(
         @Query("type") type: String,
-        @Query("uri") uri: String,
+        @Query("uri") id: String,
         @Query("app_id") appId: String,
         @Query("app_key") appKey: String,
         @Query("field") field: List<String>

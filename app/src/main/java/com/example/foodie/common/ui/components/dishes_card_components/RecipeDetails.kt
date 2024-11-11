@@ -14,10 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.foodie.R
 
 @Composable
 fun RecipeDetails(mealType: List<String>,totalTime: Double) {
@@ -28,7 +26,7 @@ fun RecipeDetails(mealType: List<String>,totalTime: Double) {
         Text(
             text = mealType.joinToString(", ") { it.replaceFirstChar { char -> char.titlecase() } },
             style = MaterialTheme.typography.bodySmall,
-            color = colorResource(id = R.color.primary_gray),
+            color = MaterialTheme.colorScheme.secondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -38,7 +36,7 @@ fun RecipeDetails(mealType: List<String>,totalTime: Double) {
         Text(
             text = if (totalTime >= 60.0) ">60 mins" else ">${totalTime.toInt()} mins",
             style = MaterialTheme.typography.bodySmall,
-            color = colorResource(id = R.color.primary_gray),
+            color = MaterialTheme.colorScheme.secondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -51,6 +49,6 @@ private fun DotIndicator() {
         modifier = Modifier
             .size(5.dp)
             .clip(CircleShape)
-            .background(colorResource(id = R.color.primary_gray))
+            .background(MaterialTheme.colorScheme.secondary)
     )
 }

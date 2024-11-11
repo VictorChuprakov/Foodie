@@ -8,27 +8,17 @@ object BottomNavConstants {
         BottomNavItem(
             Screen.Home.route,
             R.drawable.ic_home,
-            R.string.label_home
+            R.string.label_home,
         ),
         BottomNavItem(
-            Screen.Upload.route,
-            R.drawable.ic_edit,
-            R.string.label_upload
-        ),
-        BottomNavItem(
-            Screen.Scan.route,
             null,
-            R.string.label_scan
-        ),
-        BottomNavItem(
-            Screen.Notification.route,
-            R.drawable.ic_notification,
-            R.string.label_notification
+            null,
+            R.string.label_scan,
         ),
         BottomNavItem(
             Screen.Profile.route,
-            R.drawable.ic_profile,
-            R.string.label_profile
+            R.drawable.ic_user,
+            R.string.label_profile,
         )
     )
 }

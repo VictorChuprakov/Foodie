@@ -1,6 +1,5 @@
 package com.example.foodie.common.ui
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,9 +10,12 @@ import com.example.foodie.common.data.room.entities.FavoriteRecipe
 import com.example.foodie.common.data.room.entities.SearchHistory
 import com.example.foodie.common.domain.repository.FavoriteRecipesRepository
 import com.example.foodie.common.domain.repository.SearchHistoryRepository
-import com.example.foodie.common.utils.cacheImages
 import com.example.foodie.dishes.domain.repository.FoodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +23,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -35,19 +39,19 @@ class SharedViewModel @Inject constructor(
     private val dataPreference: DataPreference
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow<State<FoodResponce>>(State.Loading)
+    private val _state = MutableStateFlow<State<FoodResponce>>(State.Idle)
     val state: StateFlow<State<FoodResponce>> = _state.asStateFlow()
 
     val historySearch: StateFlow<List<SearchHistory>> = searchHistoryRepository.getAllQueries()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    val favoriteRecipes: Flow<List<FavoriteRecipe
-            >> = favoriteRecipesRepository.getAllRecipes()
+    val favoriteRecipes: Flow<List<FavoriteRecipe>> = favoriteRecipesRepository.getAllRecipes()
 
     private val _lastQuery = MutableStateFlow("")
     private val _lastTime = MutableStateFlow(0f)
     private val _lastMealType = MutableStateFlow("")
     private val _isLoading = MutableStateFlow(false)
+    private var isFirstLoad = true
 
     val lastTime = _lastTime.asStateFlow()
     val lastMealType = _lastMealType.asStateFlow()
@@ -56,75 +60,77 @@ class SharedViewModel @Inject constructor(
 
     init {
         Log.d("SharedViewModel", "ViewModel initialized")
-        loadLastValuesAndTrackChanges()
-
+        initializeData()
     }
 
 
     fun load() {
         viewModelScope.launch {
-            _isLoading.value = true  // Устанавливаем флаг загрузки в true
+            _isLoading.value = true
             try {
                 delay(2000L)
-                trackLastValuesChanges()
+                observeFiltersAndFetch()
             } finally {
-                _isLoading.value = false  // Убираем индикатор загрузки
+                _isLoading.value = false
             }
         }
     }
 
-    private fun loadLastValuesAndTrackChanges() {
+    @OptIn(FlowPreview::class)
+    private fun observeFiltersAndFetch() {
+        Log.d("SharedViewModel", "Setting up observer for filters (lastTime, lastMealType)")
+
         viewModelScope.launch {
-            val savedQuery = dataPreference.savedQuery.first()
-            val savedMealType = dataPreference.savedMealType.first()
-            val savedTime = dataPreference.savedTime.first()
-
-            Log.d(
-                "SharedViewModel",
-                "Loaded last values: query = $savedQuery, mealType = $savedMealType, time = $savedTime"
-            )
-
-            // Обновляем state
-            _lastQuery.value = savedQuery
-            _lastMealType.value = savedMealType
-            _lastTime.value = savedTime
-
-            // Теперь отслеживаем изменения и запускаем запрос при изменении
-            trackLastValuesChanges()
-        }
-    }
-
-
-    private fun trackLastValuesChanges() {
-        viewModelScope.launch {
-            Log.d("SharedViewModel", "Tracking changes in last values")
-            combine(
-                _lastQuery,
-                _lastMealType,
-                _lastTime
-            ) { query, mealType, time -> Triple(query, mealType, time) }
-                .collect { (query, mealType, time) ->
+            combine(_lastQuery, _lastTime, _lastMealType) { query, time, mealType ->
+                Triple(query, time, mealType) // Собираем все значения в один объект
+            }
+                .debounce(300)
+                .distinctUntilChanged() // Этот оператор гарантирует, что коллектор будет запускаться только при изменении значений
+                .collect { (query, time, mealType) ->
+                    Log.d(
+                        "SharedViewModel",
+                        "Filters changed - lastTime: $time, lastMealType: $mealType query: $query"
+                    )
+                    // Вызываем метод после того как все значения обновлены
                     getFoods(query, mealType, time)
                 }
         }
     }
 
-    fun getFoods(query: String, mealType: String, time: Float) {
+
+    private fun initializeData() {
+        if (isFirstLoad) {
+            Log.d("SharedViewModel", "First load detected, initializing data from DataPreference")
+            viewModelScope.launch(Dispatchers.IO) {
+                val (query, time, mealType) = listOf(
+                    async { dataPreference.savedQuery.first().toString() },
+                    async { dataPreference.savedTime.first() as Float },
+                    async { dataPreference.savedMealType.first().toString() }
+                ).awaitAll()
+
+                _lastQuery.value = query.toString()
+                _lastTime.value = time as Float
+                _lastMealType.value = mealType.toString()
+
+                isFirstLoad = false
+                Log.d("SharedViewModel", "Data initialization completed")
+                observeFiltersAndFetch()
+            }
+        }
+    }
+
+
+    private fun getFoods(query: String, mealType: String, time: Float) {
         Log.d(
             "SharedViewModel",
             "Fetching foods for query: $query, mealType: $mealType, time: $time"
         )
         _state.value = State.Loading
-
-        viewModelScope.launch {
-            _isLoading.value = true
+        viewModelScope.launch(Dispatchers.IO) {
             val result = searchFoodRepository.searchFoodByCriteria(query, mealType, time)
             Log.d("SharedViewModel", "Fetched food result: $result")
             _state.value = result
-            _isLoading.value = false
-
         }
-
     }
 
     fun saveQuery(query: String) {
@@ -139,56 +145,43 @@ class SharedViewModel @Inject constructor(
     }
 
     fun saveLastQuery(query: String) {
-        viewModelScope.launch {
-            Log.d("SharedViewModel", "Saving last query: $query")
+        viewModelScope.launch(Dispatchers.IO) {
             dataPreference.saveQuery(query)
             _lastQuery.value = query
         }
     }
 
     fun saveFilter(mealType: String, time: Float) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             Log.d("SharedViewModel", "Saving filter with MealType: $mealType, Time: $time")
 
-            // Параллельное выполнение сохранений без ожидания результата
-            val timeJob = launch { dataPreference.saveTime(time) }
-            val mealTypeJob = launch { dataPreference.saveMealType(mealType) }
+            // Параллельно сохраняем время и тип еды
+            val time1 = async { dataPreference.saveTime(time) }
+            val time2 = async { dataPreference.saveMealType(mealType) }
 
-            // Ожидание завершения обоих корутин
-            timeJob.join()
-            mealTypeJob.join()
-            // Обновляем значения после завершения операций
+            // Ждем завершения обеих корутин
+            awaitAll(time1, time2)
+
+            // Обновляем значения после того, как обе операции завершены
             _lastTime.value = time
             _lastMealType.value = mealType
+
         }
     }
 
 
-    fun saveFavoriteRecipe(recipe: FavoriteRecipe, context: Context) {
-        viewModelScope.launch {
+    // Сохраняем обновленный рецепт в базе данных
 
-            val cachedImagePaths =
-                cacheImages(context, listOf(recipe.image, recipe.images.large.url))
-
-            // Обновляем рецепт с новыми путями к изображениям
-            val updatedRecipe = recipe.copy(
-                image = cachedImagePaths[0], // Обновляем основное изображение
-                images = recipe.images.copy( // Обновляем вложенные изображения
-                    large = recipe.images.large.copy(url = cachedImagePaths[1])
-                )
-            )
-
-            // Сохраняем обновленный рецепт в базе данных
-            favoriteRecipesRepository.addFavoriteRecipe(updatedRecipe)
-
-
+    fun saveFavoriteRecipe(recipe: FavoriteRecipe) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteRecipesRepository.addFavoriteRecipe(recipe)
         }
     }
 
     // Функция для удаления рецепта из избранного
-    fun removeFavoriteRecipe(uri: String) {
-        viewModelScope.launch {
-            favoriteRecipesRepository.removeFavoriteRecipe(uri)
+    fun removeFavoriteRecipe(id: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            favoriteRecipesRepository.removeFavoriteRecipeById(id)
         }
     }
 }

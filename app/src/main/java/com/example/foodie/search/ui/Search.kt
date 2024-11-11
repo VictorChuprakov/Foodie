@@ -1,7 +1,6 @@
 package com.example.foodie.search.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,6 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,16 +48,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -98,10 +97,12 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
             IconButton(onClick = {
                 navController.popBackStack()
                 keyboardController?.hide()
+                focusManager.clearFocus(true)
             }) {
-                Image(
-                    painter = painterResource(R.drawable.ic_arrow_back),
-                    contentDescription = null
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_arrow_back),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondaryContainer
                 )
             }
         }
@@ -119,30 +120,28 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
             placeholder = {
                 Text(
                     text = stringResource(id = R.string.search),
-                    color = colorResource(id = R.color.primary_gray),
+                    color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.titleMedium
                 )
             },
             shape = CircleShape,
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_search),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_search),
                     contentDescription = null,
-                    tint = if (isFocused) colorResource(id = R.color.primary_gray) else colorResource(
-                        id = R.color.primary_blue
-                    )
+                    tint = MaterialTheme.colorScheme.secondaryContainer
                 )
+
             },
             trailingIcon = {
                 AnimatedVisibility(visible = isFocused) {
                     IconButton(onClick = {
                         query = ""
-                        focusManager.clearFocus(true)
                     }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_cancel),
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_cancel),
                             contentDescription = null,
-                            tint = colorResource(R.color.primary_blue)
+                            tint = MaterialTheme.colorScheme.secondaryContainer
                         )
                     }
                 }
@@ -158,33 +157,32 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
                         navController.navigate(Screen.Home.route)
                         keyboardController?.hide()
                         focusManager.clearFocus(true)
-                        isFocused = true
                     }
                 }
             ),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = colorResource(id = R.color.transparent),
-                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                focusedTextColor = colorResource(id = R.color.primary_blue),
-                focusedPlaceholderColor = colorResource(id = R.color.primary_gray),
-                unfocusedBorderColor = colorResource(id = R.color.transparent),
-                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                unfocusedTextColor = colorResource(id = R.color.primary_blue),
-                unfocusedPlaceholderColor = colorResource(id = R.color.primary_gray)
+                focusedBorderColor = Color.Transparent,
+                focusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                focusedTextColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor =  Color.Transparent,
+                unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.primary,
             ),
             singleLine = true
         )
 
         AnimatedVisibility(visible = isFocused) {
             IconButton(onClick = { scope.launch { sheetState.show() } }) {
-                Image(painter = painterResource(R.drawable.ic_filter), contentDescription = null)
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.ic_filter),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondaryContainer
+                )
             }
         }
     }
 
-
     if (sheetState.isVisible) {
-
         ModalBottomSheet(
             sheetState = sheetState,
             onDismissRequest = {
@@ -229,7 +227,6 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
                             sharedViewModel.saveFilter(lastMealType, sliderPosition)
                             navController.navigate(Screen.Home.route)
                             focusManager.clearFocus(true)
-                            isFocused = true
                         }
                     )
                 }
@@ -240,26 +237,18 @@ fun Search(navController: NavController, sharedViewModel: SharedViewModel) {
 
 @Composable
 private fun TitleTextSlider() {
-    Text(
-        buildAnnotatedString {
-            withStyle(
-                style = MaterialTheme.typography.titleLarge.toSpanStyle().copy(
-                    color = colorResource(R.color.primary_blue),
-                    fontWeight = FontWeight.ExtraBold
-                )
-            ) {
-                append(stringResource(R.string.cooking_duration))
-            }
-            withStyle(
-                style = MaterialTheme.typography.titleLarge.toSpanStyle().copy(
-                    color = colorResource(R.color.primary_gray),
-                )
-            ) {
-                append(stringResource(R.string.in_minutes))
-            }
-        }
-
-    )
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = stringResource(R.string.cooking_duration),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Text(
+            text = stringResource(R.string.in_minutes),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.primary,
+        )
+    }
 }
 
 @Composable
@@ -270,14 +259,13 @@ private fun SliderValueDisplay(
         Text(
             text = stringResource(R.string.duration_10),
             style = MaterialTheme.typography.titleMedium,
-            color = colorResource(R.color.primary_green),
+            color = MaterialTheme.colorScheme.primaryContainer,
         )
         Text(
             text = stringResource(R.string.duration_60),
             style = MaterialTheme.typography.titleMedium,
-            color = if (sliderPosition == 60f) colorResource(R.color.primary_green) else colorResource(
-                R.color.primary_gray
-            ),
+            color = if (sliderPosition == 60f) MaterialTheme.colorScheme.primaryContainer
+            else MaterialTheme.colorScheme.secondary
         )
     }
 }
@@ -287,7 +275,7 @@ private fun TitleText(title: String) {
     Text(
         text = title,
         style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.ExtraBold),
-        color = colorResource(R.color.primary_blue),
+        color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(top = 15.dp)
     )
 }
@@ -305,13 +293,13 @@ private fun CategoryList(
                     .fillMaxWidth()
                     .border(
                         2.dp,
-                        color = if (selectedMealType == item.apiName) colorResource(R.color.transparent)
-                        else MaterialTheme.colorScheme.outlineVariant,
+                        color = if (selectedMealType == item.apiName) Color.Transparent
+                        else MaterialTheme.colorScheme.outline,
                         shape = CircleShape
                     )
                     .background(
-                        if (selectedMealType == item.apiName) colorResource(R.color.primary_green)
-                        else MaterialTheme.colorScheme.surfaceContainerHigh,
+                        if (selectedMealType == item.apiName) MaterialTheme.colorScheme.primaryContainer
+                        else MaterialTheme.colorScheme.background,
                         shape = CircleShape
                     )
                     .clickable {
@@ -321,8 +309,8 @@ private fun CategoryList(
                 Text(
                     text = stringResource(item.displayNameResId),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = if (selectedMealType == item.apiName) colorResource(R.color.white)
-                    else colorResource(R.color.primary_gray),
+                    color = if (selectedMealType == item.apiName) MaterialTheme.colorScheme.onPrimaryContainer
+                    else MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(vertical = 15.dp, horizontal = 25.dp)
                 )
             }
@@ -344,7 +332,7 @@ private fun CustomSlider(
         valueRange = 10f..60f,
         interactionSource = interactionSource,
         colors = SliderDefaults.colors(
-            activeTrackColor = colorResource(R.color.primary_green),
+            activeTrackColor = MaterialTheme.colorScheme.primaryContainer,
             inactiveTrackColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         ),
         thumb = {
@@ -353,7 +341,7 @@ private fun CustomSlider(
                     Text(
                         text = sliderPosition.toInt().toString(),
                         style = MaterialTheme.typography.titleMedium,
-                        color = colorResource(R.color.primary_green),
+                        color = MaterialTheme.colorScheme.primaryContainer,
                     )
 
                 },
@@ -361,7 +349,7 @@ private fun CustomSlider(
             ) {
                 SliderDefaults.Thumb(
                     interactionSource = interactionSource,
-                    colors = SliderDefaults.colors(thumbColor = colorResource(R.color.primary_green))
+                    colors = SliderDefaults.colors(thumbColor = MaterialTheme.colorScheme.primaryContainer)
                 )
             }
         }
@@ -381,29 +369,30 @@ private fun ActionButtons(
     ) {
         Button(
             onClick = onCancel,
+            contentPadding = PaddingValues(15.dp),
             modifier = Modifier.weight(1f),
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                contentColor = MaterialTheme.colorScheme.primary
             )
         ) {
             Text(
                 text = stringResource(R.string.cancel),
                 style = MaterialTheme.typography.titleMedium,
-                color = colorResource(R.color.primary_blue),
-                modifier = Modifier.padding(10.dp)
-
             )
         }
         Button(
             onClick = onDone,
+            contentPadding = PaddingValues(15.dp),
             modifier = Modifier.weight(1f),
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.primary_green))
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+            )
         ) {
             Text(
                 text = stringResource(R.string.done),
                 style = MaterialTheme.typography.titleMedium,
-                color = colorResource(R.color.white),
-                modifier = Modifier.padding(10.dp)
             )
         }
     }

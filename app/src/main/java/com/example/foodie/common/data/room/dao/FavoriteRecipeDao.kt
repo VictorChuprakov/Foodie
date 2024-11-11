@@ -16,8 +16,8 @@ interface FavoriteRecipesDao {
     fun getAllFavoriteRecipes(): Flow<List<FavoriteRecipe>>
 
     @Query("DELETE FROM favorite_recipe WHERE uri = :uri")
-    suspend fun deleteByUri(uri: String)
+    suspend fun deleteById(uri: String)
 
     @Query("SELECT * FROM favorite_recipe WHERE uri = :uri")
-    suspend fun getRecipeByUri(uri: String): FavoriteRecipe
+    suspend fun getRecipeById(uri: String): FavoriteRecipe
 }

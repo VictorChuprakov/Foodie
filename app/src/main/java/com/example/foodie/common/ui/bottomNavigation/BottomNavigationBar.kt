@@ -8,31 +8,26 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.foodie.R
-import com.example.foodie.common.navigation.Screen
 
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
     NavigationBar(
-        containerColor = Color.White,
-        tonalElevation = 0.dp // Убираем тень для чистого фона
+        containerColor = Color.Transparent,
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry?.destination?.route
-
+        val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         BottomNavConstants.BottomNavItems.forEach { navItem ->
-            if (navItem.route == Screen.Scan.route) {
+            if (navItem.route == null) {
                 NavigationBarItem(
                     selected = false,
                     onClick = {},
@@ -40,7 +35,7 @@ fun BottomNavigationBar(navController: NavHostController) {
                     label = {
                         Text(
                             text = stringResource(id = navItem.label),
-                            color = colorResource(id = R.color.primary_gray),
+                            color = MaterialTheme.colorScheme.secondary,
                             style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium),
                             modifier = Modifier.padding(top = 20.dp)
                         )
@@ -53,39 +48,38 @@ fun BottomNavigationBar(navController: NavHostController) {
                 NavigationBarItem(
                     selected = currentRoute == navItem.route,
                     onClick = {
-                        if (navItem.route != null) {
-                            navController.navigate(navItem.route) {
-                                popUpTo(navController.graph.startDestinationId) {
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
+                        navController.navigate(navItem.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
                             }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     },
                     icon = {
                         if (navItem.icon != null) {
                             Icon(
-                                painter = painterResource(id = navItem.icon),
+                                imageVector = ImageVector.vectorResource(id = navItem.icon),
                                 contentDescription = null,
                                 tint = if (currentRoute == navItem.route) {
-                                    colorResource(id = R.color.primary_green)
+                                    MaterialTheme.colorScheme.primaryContainer
                                 } else {
-                                    colorResource(id = R.color.primary_gray)
+                                    MaterialTheme.colorScheme.secondary
                                 }
                             )
                         }
                     },
                     label = {
-                        Text(
-                            text = stringResource(id = navItem.label),
-                            color = if (currentRoute == navItem.route) {
-                                colorResource(id = R.color.primary_green)
-                            } else {
-                                colorResource(id = R.color.primary_gray)
-                            },
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
-                        )
+
+                            Text(
+                                text = stringResource(id = navItem.label),
+                                color = if (currentRoute == navItem.route) {
+                                    MaterialTheme.colorScheme.primaryContainer
+                                } else {
+                                    MaterialTheme.colorScheme.secondary
+                                },
+                                style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.Medium)
+                            )
                     },
                     colors = NavigationBarItemDefaults.colors(
                         indicatorColor = Color.Transparent

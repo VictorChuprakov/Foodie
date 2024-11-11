@@ -14,7 +14,7 @@ class FoodRepositoryImpl(private val apiInterface: ApiInterface) : FoodRepositor
         return try {
             val mealTypes = getMealTypes(mealType)
             val responce = apiInterface.randomFood(
-                "any",
+                "public",
                 RetrofitConstants.API_ID,
                 RetrofitConstants.API_KEY,
                 query,

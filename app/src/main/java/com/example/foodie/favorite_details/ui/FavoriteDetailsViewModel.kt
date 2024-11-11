@@ -1,32 +1,41 @@
 package com.example.foodie.favorite_details.ui
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.foodie.common.data.room.entities.FavoriteRecipe
 import com.example.foodie.common.domain.repository.FavoriteRecipesRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 
-@HiltViewModel
-class FavoriteDetailsViewModel @Inject constructor(
-    private val favoriteRecipesRepository: FavoriteRecipesRepository,
-    val savedStateHandle: SavedStateHandle,
+@HiltViewModel(assistedFactory = FavoriteDetailsViewModel.FavoriteDetailsViewModelFactory::class)
+class FavoriteDetailsViewModel @AssistedInject constructor(
+    @Assisted val id: String,
+    private val favoriteRecipesRepository: FavoriteRecipesRepository
 ) : ViewModel() {
 
-    // Состояние для хранения выбранного рецепта
-    private val _recipe = mutableStateOf<FavoriteRecipe?>(null)
-    val recipe = _recipe
+    private val _recipe = MutableStateFlow<FavoriteRecipe?>(null)
+    val recipe = _recipe.asStateFlow()
 
-    fun getRecipeById() {
-        viewModelScope.launch {
-            val id: String? = savedStateHandle["favoriteFoodId"]
-            if (id != null) {
-            _recipe.value = favoriteRecipesRepository.findRecipeById(id)
-            }
+    @AssistedFactory
+    interface FavoriteDetailsViewModelFactory{
+        fun create(id:String):FavoriteDetailsViewModel
+    }
+
+    init {
+        getRecipeById()
+    }
+
+    private fun getRecipeById() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val recipeData = favoriteRecipesRepository.findRecipeById(id)
+            _recipe.value = recipeData
         }
     }
 }

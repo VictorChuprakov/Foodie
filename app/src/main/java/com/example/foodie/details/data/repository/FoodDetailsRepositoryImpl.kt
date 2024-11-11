@@ -30,12 +30,9 @@ class FoodDetailsRepositoryImpl(private val apiInterface: ApiInterface) : FoodDe
                     "url",
                 )
             )
-            // Проверяем успешность запроса
             if (responce.isSuccessful) {
                 val rawBody = responce.body()
-
                 val body = rawBody?.toFoodResponce()
-
                 if (body != null) {
                     State.Success(body)
                 } else {
@@ -48,5 +45,6 @@ class FoodDetailsRepositoryImpl(private val apiInterface: ApiInterface) : FoodDe
             State.Error(ApiError.NETWORK_ERROR)
         } catch (e: Exception) {
             State.Error(ApiError.UNEXPECTED_ERROR)
-        }    }
+        }
+    }
 }
